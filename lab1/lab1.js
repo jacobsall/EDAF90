@@ -30,16 +30,10 @@ for (const name in imported.inventory) {
 
  Slide 60?
 
- Object keys only gets enumerable properties, but for looping seems to do the same?
- the for...in executes in a arbitrary order
-
- iteration order is insertion order for string keys and ascending for number-like keys
-
- Array indexes are just enumerable properties with integer names and are otherwise identical to general object properties.
- There is no guarantee that for...in will return the indexes in any particular order.
  The for...in loop statement will return all enumerable properties, including those with non–integer names and those that are inherited.
+ Object.keys are only the own enumerable properties
 
- You will not print inherited (prototype)
+
 
  */
 
@@ -83,7 +77,7 @@ class Salad{
 }
 
 Salad.prototype.getPrice = function() {
-  return Object.values(this.ingredients).map(i => i['price']).reduce((tot,curr) => tot + curr);
+  return Object.values(this.ingredients).reduce((tot,curr) => tot + curr.price, 0);
 };
 Salad.prototype.count = function(property) {
   return Object.values(this.ingredients).filter(i => i[property]).length;
@@ -133,10 +127,9 @@ class GourmetSalad extends Salad {
     super(args);
   }
 
-  add(name, properties, size) {
+  add(name, properties, size = 1) {
 
-    let oldSize = this.ingredients[name] ? this.ingredients[name].size : 0;
-    let newSize = size ? oldSize + size : oldSize + 1;
+    let newSize = this.ingredients[name] ? this.ingredients[name].size + size : size;
 
     let propsWithSize = {
       ...properties,
@@ -157,7 +150,8 @@ GourmetSalad.prototype.getPrice = function() {
 /*
 GourmetSalad.prototype.count = function(property) {
   //Should this react to amounts??
-  return Object.values(this.ingredients).filter(i => i[property]).length;
+  //return Object.values(this.ingredients).filter(i => i[property]).length;
+  return Object.values(this.ingredients).map(i => i['size']).reduce((tot,curr) => tot + curr);
 };*/
 
 let myGourmetSalad = new GourmetSalad()
@@ -170,7 +164,7 @@ let myGourmetSalad = new GourmetSalad()
 console.log('Min gourmetsallad med lite bacon kostar ' + myGourmetSalad.getPrice() + ' kr');
 myGourmetSalad.add('Bacon', imported.inventory['Bacon'], 1)
 console.log('Med extra bacon kostar den ' + myGourmetSalad.getPrice() + ' kr');
-console.log()
+//console.log('Antal ingredienser: ' + myGourmetSalad.count() + ' st')
 
 console.log('\n--- Assignment 5 ---------------------------------------')
 console.log('Min gourmetsallad har uuid: ' + myGourmetSalad.uuid);

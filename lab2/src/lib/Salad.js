@@ -1,5 +1,6 @@
 class Salad{
   uuid;
+
   constructor(args){
     this.uuid = 'salad_' + Salad.instanceCounter++;
     this.ingredients = {};

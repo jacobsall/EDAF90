@@ -1,7 +1,7 @@
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import { Component } from 'react';
-import { Link, Routes, Route, useLocation } from 'react-router-dom';
+import { NavLink, Routes, Route } from 'react-router-dom';
 
 import ComposeSaladWrapper from './components/ComposeSaladWrapper';
 import ViewOrder from './components/ViewOrder';
@@ -62,30 +62,30 @@ const Header = () => {
 
 const NavBar = () => {
   return (
-    <ul className="nav nav-pills">
+    <ul className="nav nav-tabs">
       <li className="nav-item">
-        <Link 
-          className={`nav-link ${useLocation().pathname === '/' ? "active" : ""}`} 
+        <NavLink 
+          className={`nav-link`} 
           to="/"
         >
           Home
-        </Link>
+        </NavLink>
       </li>
       <li className="nav-item">
-        <Link 
-          className={`nav-link ${useLocation().pathname === '/compose-salad' ? "active" : ""}`} 
+        <NavLink 
+          className={`nav-link`} 
           to="/compose-salad"
         >
           Compose a salad
-        </Link>
+        </NavLink>
       </li>
       <li>
-        <Link 
-          className={`nav-link ${useLocation().pathname === '/view-order' ? "active" : ""}`}
+        <NavLink 
+          className={`nav-link`}
           to='/view-order'
         >
           Shopping cart
-        </Link>  
+        </NavLink>  
       </li>
     </ul>
   );

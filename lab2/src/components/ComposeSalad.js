@@ -70,14 +70,6 @@ class ComposeSalad extends Component {
     }
 
     if(!e.target.checkValidity()){
-      // this.setState(state => {
-      //   return {
-      //     formErrors: {
-      //     submissionFailed: true,
-      //     extras: state.extras.length < 3 || state.extras.length > 9
-      //     }
-      //   }
-      // })
       this.setState({
         formErrors: {
           submissionFailed: true,

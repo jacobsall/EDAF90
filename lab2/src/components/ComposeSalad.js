@@ -12,10 +12,16 @@ class ComposeSalad extends Component {
       protein: '',
       extras: [],
       dressing: '',
+      formErrors : {
+        submissionFailed: false,
+        extras: false,
+      }
     };
   }
 
   handleChange = (event) => {
+    event.target.parentElement.classList.add("was-validated");
+
     const target = event.target;
     const value = target.value;
     const name = target.name;
@@ -23,10 +29,18 @@ class ComposeSalad extends Component {
     if(target.type === 'checkbox'){
       let list = this.state[name];
       list = target.checked ? list.concat(value) : list.filter(i => i !== value);
-      this.setState({
-        [name]: list 
-      }, () => {
-        console.log(this.state)
+  
+      let extraError = list.length < 3 || list.length > 9
+
+      this.setState(state => ({
+        [name]: list,
+        formErrors: {
+          ...state.formErrors,
+          extras: extraError
+        }
+      }), () => {
+        console.log(this.state.formErrors.extras + " " + this.state.formErrors.submissionFailed)
+      
       });
     }
     else{
@@ -36,10 +50,42 @@ class ComposeSalad extends Component {
         console.log(this.state)
       });
     }
+
   }
 
   handleSubmit = (e) => {
     e.preventDefault();
+    e.target.classList.add("was-validated");
+
+    let extraError = this.state.extras.length < 3 || this.state.extras.length > 9;
+
+    if(extraError){
+      this.setState({
+        formErrors: {
+          submissionFailed: true,
+          extras: extraError
+        }
+      })
+      return
+    }
+
+    if(!e.target.checkValidity()){
+      // this.setState(state => {
+      //   return {
+      //     formErrors: {
+      //     submissionFailed: true,
+      //     extras: state.extras.length < 3 || state.extras.length > 9
+      //     }
+      //   }
+      // })
+      this.setState({
+        formErrors: {
+          submissionFailed: true,
+          extras: extraError
+        }
+      })
+      return
+    }
 
     let salad = new Salad();
     salad.add(this.state.foundation, this.state.inventory[this.state.foundation]);
@@ -54,7 +100,9 @@ class ComposeSalad extends Component {
       protein: '',
       extras: [],
       dressing: ''
-    })
+    });
+
+    this.props.navigate('/view-order');
   }
 
   render() {
@@ -66,13 +114,13 @@ class ComposeSalad extends Component {
     return (
       <div className="container col-12">
         <div className="row h-200 p-5 bg-light border rounded-3">
-          <h2>Välj innehållet i din sallad</h2>
-          <form onSubmit={(e) => this.handleSubmit(e)}>
+          <h2>Pick the content of your salad</h2>
+          <form noValidate onSubmit={(e) => this.handleSubmit(e)}>
               <SaladSelect type='foundation' data={foundation} handleChange={this.handleChange} valueRef={this.state.foundation}/>
               <SaladSelect type='protein' data={protein} handleChange={this.handleChange} valueRef={this.state.protein}/>
-              <SaladCheckbox type='extras' data={extras} handleChange={this.handleChange} valueRefs={this.state.extras}/>
-              <SaladSelect type='dressing' data={dressing} handleChange={this.handleChange} valueRef={this.state.dressing}/>
-              <input className='btn btn-outline-secondary' type='submit' value='Submit'/>
+              <SaladCheckbox type='extras' data={extras} handleChange={this.handleChange} valueRefs={this.state.extras} showError={this.state.formErrors.submissionFailed && this.state.formErrors.extras}/>
+              <SaladSelect type='dressing' data={dressing} handleChange={this.handleChange} valueRef={this.state.dressing}/>              
+              <input className='btn btn-outline-dark' type='submit' value='Submit'/>
           </form>
         </div>
       </div>

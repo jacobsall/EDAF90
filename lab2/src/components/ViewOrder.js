@@ -37,7 +37,7 @@ function ViewOrder({order, handleRemove}) {
   return (
     <div className='container col-12 mb-3'>
       <div className='row p-5 h-200 bg-light border rounded-3'>
-        <h2>Varukorg</h2>
+        <h2>Shopping cart</h2>
         <ul className='list-group'>
           {createOrderList(order, handleRemove)}
         </ul> 

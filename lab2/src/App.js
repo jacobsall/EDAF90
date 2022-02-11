@@ -2,10 +2,9 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import { Component } from 'react';
 import { NavLink, Routes, Route } from 'react-router-dom';
-
 import ComposeSaladWrapper from './components/ComposeSaladWrapper';
 import ViewOrder from './components/ViewOrder';
-import inventory from './lib/inventory.ES6';
+//import inventory from './lib/inventory.ES6';
 import ViewIngredient from './components/ViewIngredient';
 import Home from './components/Home';
 
@@ -14,6 +13,7 @@ class App extends Component
   constructor(props) {
     super(props);
     this.state = {
+      inventory: {},
       order: []
     };
   }
@@ -30,6 +30,22 @@ class App extends Component
     });
   }
 
+  componentDidMount() {
+    let url = "http://localhost:8080/";
+    let endpoints = ["foundations/", "proteins/", "dressings/", "extras/"];
+    const inventory = {};
+
+    Promise.all(
+      endpoints.map(endpoint => {
+        return fetchJson(url + endpoint).then(ingredients => {
+          return Promise.all(ingredients.map(ingredient => {
+            return fetchJson(url + endpoint + ingredient).then(i => inventory[ingredient] = i);
+          }))
+        })
+      })
+    ).then(() => this.setState({inventory}))
+  }
+
   render() {
     return (
       <div className="container py-4">
@@ -40,8 +56,8 @@ class App extends Component
           <Route path='/' index element={<Home/>}/>
           <Route path='*' element={<h4>Page not found</h4>}/>
           <Route path='/view-order' element={<ViewOrder order={this.state.order} handleRemove={this.removeSalad}/>}/>
-          <Route path='/compose-salad' element={<ComposeSaladWrapper inventory={inventory} addSalad={this.addSalad}/>}/>
-          <Route path='/view-ingredient/:name' element={<ViewIngredient inventory={inventory}/>}/>
+          <Route path='/compose-salad' element={<ComposeSaladWrapper inventory={this.state.inventory} addSalad={this.addSalad}/>}/>
+          <Route path='/view-ingredient/:name' element={<ViewIngredient inventory={this.state.inventory}/>}/>
         </Routes>
     
         <footer className="pt-3 mt-4 text-muted border-top">
@@ -50,6 +66,16 @@ class App extends Component
       </div>
     );
   }
+}
+
+
+const fetchJson = (url) => {
+  return fetch(url).then(response => {
+    if(!response.ok) {
+      throw new Error(`${url} returned status ${response.status}`);
+    }
+    return response.json();
+  })
 }
 
 const Header = () => {

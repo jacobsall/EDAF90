@@ -7,7 +7,6 @@ class ComposeSalad extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      inventory: props.inventory,
       foundation: '',
       protein: '',
       extras: [],
@@ -38,19 +37,13 @@ class ComposeSalad extends Component {
           ...state.formErrors,
           extras: extraError
         }
-      }), () => {
-        console.log(this.state.formErrors.extras + " " + this.state.formErrors.submissionFailed)
-      
-      });
+      }));
     }
     else{
       this.setState({
         [name]: value 
-      }, () => {
-        console.log(this.state)
       });
     }
-
   }
 
   handleSubmit = (e) => {
@@ -80,10 +73,10 @@ class ComposeSalad extends Component {
     }
 
     let salad = new Salad();
-    salad.add(this.state.foundation, this.state.inventory[this.state.foundation]);
-    salad.add(this.state.protein, this.state.inventory[this.state.protein]);
-    salad.add(this.state.dressing, this.state.inventory[this.state.dressing]);
-    this.state.extras.forEach(extra => salad.add(extra, this.state.inventory[extra]));
+    salad.add(this.state.foundation, this.props.inventory[this.state.foundation]);
+    salad.add(this.state.protein, this.props.inventory[this.state.protein]);
+    salad.add(this.state.dressing, this.props.inventory[this.state.dressing]);
+    this.state.extras.forEach(extra => salad.add(extra, this.props.inventory[extra]));
     
     this.props.addSalad(salad);
 
@@ -98,10 +91,10 @@ class ComposeSalad extends Component {
   }
 
   render() {
-    let extras = Object.keys(this.state.inventory).filter(name => this.state.inventory[name].extra);
-    let foundation = Object.keys(this.state.inventory).filter(name => this.state.inventory[name].foundation);
-    let protein = Object.keys(this.state.inventory).filter(name => this.state.inventory[name].protein);
-    let dressing = Object.keys(this.state.inventory).filter(name => this.state.inventory[name].dressing);
+    let extras = Object.keys(this.props.inventory).filter(name => this.props.inventory[name].extra);
+    let foundation = Object.keys(this.props.inventory).filter(name => this.props.inventory[name].foundation);
+    let protein = Object.keys(this.props.inventory).filter(name => this.props.inventory[name].protein);
+    let dressing = Object.keys(this.props.inventory).filter(name => this.props.inventory[name].dressing);
 
     return (
       <div className="container col-12">

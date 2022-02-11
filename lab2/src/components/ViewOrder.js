@@ -1,10 +1,8 @@
 import React from 'react';
 
 const createOrderList = (order, handleRemove) => {
-
   return order.map(salad => {
     let everything = Object.keys(salad.ingredients).map(i => <div key={salad.uuid+i}>{i + " " + salad.ingredients[i].price + "kr"}</div>);
-
     return (
       <li key={salad.uuid} className='list-group-item'>
         <div className='d-flex w-100 justify-content-between'>
@@ -28,9 +26,7 @@ const createOrderList = (order, handleRemove) => {
         </div>
       </li>
     );
-  }
-    
-  );
+  });
 }
 
 function ViewOrder({order, handleRemove}) {

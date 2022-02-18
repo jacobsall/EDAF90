@@ -87,7 +87,7 @@ class ComposeSalad extends Component {
       dressing: ''
     });
 
-    this.props.navigate('/view-order');
+    this.props.navigate('/view-basket');
   }
 
   render() {

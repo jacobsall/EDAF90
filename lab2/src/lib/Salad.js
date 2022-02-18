@@ -1,8 +1,10 @@
+import { v4 as uuidv4 } from 'uuid';
+
 class Salad{
   uuid;
 
   constructor(args){
-    this.uuid = 'salad_' + Salad.instanceCounter++;
+    this.uuid = uuidv4();
     this.ingredients = {};
 
     if (args instanceof Salad) {
@@ -10,6 +12,7 @@ class Salad{
     }
     else if (typeof args === "string") {
       this.ingredients = JSON.parse(args).ingredients;
+      this.uuid = JSON.parse(args).uuid;
     }
   }
 
@@ -23,7 +26,6 @@ class Salad{
     return this;
   }
 
-  static instanceCounter = 0;
 }
 
 Salad.prototype.getPrice = function() {
